@@ -20,7 +20,7 @@ def reciever():
 
 
 @app.route('/csvparse', methods = ['POST'])
-def csv():
+def csvread():
     file = request.files['file']
     if file and allowed_file(file.filename):
         extention = str(file.filename.rsplit('.', 1)[1].lower())
@@ -39,21 +39,33 @@ def csv():
                 except (IndexError, ValueError):
                     allFound = False
                     break
-                try:
-                    int(worksheet.cell_value(rowx = rx, colx = 1))
-                except (IndexError, ValueError):
-                    allFound = False
-                    break
-                try:
-                    int(worksheet.cell_value(rowx = rx, colx = 2))
-                except (IndexError, ValueError):
-                    allFound = False
-                    break
                 if allFound:
+                    try:
+                        int(worksheet.cell_value(rowx = rx, colx = 1))
+                    except (IndexError, ValueError):
+                        allFound = False
+                        break
+                    if allFound:
+                        try:
+                            int(worksheet.cell_value(rowx = rx, colx = 2))
+                        except (IndexError, ValueError):
+                            allFound = False
+                            break
+                if allFound:
+                    #add to the db
                     print(int(worksheet.cell_value(rowx = rx, colx = 0)))
                     print(int(worksheet.cell_value(rowx = rx, colx = 1)))
                     print(int(worksheet.cell_value(rowx = rx, colx = 2)))
-
+            os.remove(dirToSave)
+        elif extention == "csv":
+            dirToSave = str(os.getcwd())
+            filename = secure_filename(file.filename)
+            dirToSave += "/spreadsheets/" + filename
+            file.save(dirToSave)
+            f = open(dirToSave)
+            r = csv.reader(f)
+            for row in r:
+                print(row)
             #deleted file
             os.remove(dirToSave)
     return render_template('default.html')
