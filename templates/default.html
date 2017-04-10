@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+</head>
+
+<body>
+  <div class="item">
+    <div class="banner">
+      <h2>Add Projects Automatically</h2>
+    </div>
+    <div class="info">
+      <p>Add name, location, description (CSV/XLS/XLSX format) with a file upload</p>
+      <form action="/csvparse" method=post enctype=multipart/form-data>
+      <input type='file' name='file' accept=".csv,.xls,.xlsx">
+      <input type='submit' value="Upload and Process Selected File">
+  </form>
+    </div>
+  </div>
+</body>
+</html>
